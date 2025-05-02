@@ -37,6 +37,7 @@
 #define GPIO_OUTPUT_IO_0    32
 #define GPIO_OUTPUT_IO_1    33
 #define GPIO_OUTPUT_IO_2    25
+#define GPIO_OUTPUT_IO_3    26
 
 #define LEDC_CHANNEL_RED              (LEDC_CHANNEL_0)
 #define LEDC_CHANNEL_GREEN            (LEDC_CHANNEL_1)
@@ -117,6 +118,8 @@ void app_main (void){
     gpio_set_direction (GPIO_OUTPUT_IO_2, GPIO_MODE_INPUT );
     gpio_set_direction (GPIO_OUTPUT_IO_1, GPIO_MODE_INPUT );
     gpio_set_direction (GPIO_OUTPUT_IO_0, GPIO_MODE_INPUT );
+    gpio_set_direction (GPIO_OUTPUT_IO_3, GPIO_MODE_INPUT );
+    
     int max, min;
     int value;
     int last;
@@ -145,6 +148,7 @@ void app_main (void){
    
     while (1){
         int buttonState = gpio_get_level (GPIO_OUTPUT_IO_2);
+        int sensorState = gpio_get_level (GPIO_OUTPUT_IO_3);
         //printf("Button State: %d\n", buttonState);
         while(buttonState == 0){
             int buttonState = gpio_get_level (GPIO_OUTPUT_IO_2);
@@ -179,7 +183,7 @@ void app_main (void){
         }  
         printf("value: %d\n",value); 
         vTaskDelay(pdMS_TO_TICKS(10));
-        if((sensor_value > 2000) || (action == true)){
+        if(((sensor_value > 2000) || (action == true))&&(sensorState == 1)){
             out_Led(value);
         }
         else{
